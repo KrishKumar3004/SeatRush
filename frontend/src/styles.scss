@@ -1,0 +1,4 @@
+@use '@angular/material' as mat;
+html { @include mat.theme((color:(primary:mat.$violet-palette,tertiary:mat.$cyan-palette),typography:Roboto,density:0)); color-scheme:dark; }
+*{box-sizing:border-box}html,body{min-height:100%;margin:0}body{font-family:Roboto,"Helvetica Neue",sans-serif;background:radial-gradient(circle at 76% 8%,rgba(93,59,169,.24),transparent 30%),radial-gradient(circle at 14% 42%,rgba(31,75,128,.18),transparent 28%),#080c1c}button,input{font:inherit}
+

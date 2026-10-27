@@ -1,0 +1,46 @@
+<mat-toolbar class="toolbar">
+  <div class="brand"><mat-icon>confirmation_number</mat-icon><span>SeatRush</span></div>
+  <span class="spacer"></span><span class="live"><i></i> Live inventory</span>
+</mat-toolbar>
+<main>
+  <section class="hero">
+    <mat-chip>ONE NIGHT ONLY</mat-chip>
+    <h1>Neon Skyline <span>Live</span></h1>
+    <p>Saturday, 8:00 PM · Aurora Arena</p>
+    <div class="availability"><strong>{{ availableCount() }}</strong> seats still available</div>
+  </section>
+  <div class="layout">
+    <mat-card class="venue-card" appearance="outlined">
+      <mat-card-header><mat-card-title>Choose your seat</mat-card-title><mat-card-subtitle>Inventory updates after every booking</mat-card-subtitle></mat-card-header>
+      <mat-card-content>
+        <div class="stage"><span>STAGE</span></div>
+        @if (loading()) {
+          <div class="loading"><mat-spinner diameter="44" /><span>Loading live seats…</span></div>
+        } @else {
+          <div class="seat-map" aria-label="Venue seat map">
+            @for (seat of seats(); track seat.id) {
+              <button class="seat" [class.booked]="seat.status === 'BOOKED'" [class.selected]="selected()?.id === seat.id"
+                [disabled]="seat.status === 'BOOKED'" [attr.aria-label]="'Seat ' + seat.label + ', ' + seat.status.toLowerCase()" (click)="select(seat)">{{ seat.label }}</button>
+            }
+          </div>
+          <div class="legend"><span><i class="available"></i>Available</span><span><i class="chosen"></i>Selected</span><span><i class="taken"></i>Booked</span></div>
+        }
+      </mat-card-content>
+    </mat-card>
+    <mat-card class="checkout-card" appearance="outlined">
+      <mat-card-header><mat-card-title>Your booking</mat-card-title></mat-card-header>
+      <mat-card-content>
+        @if (selected(); as seat) {
+          <div class="ticket"><div><span>SEAT</span><strong>{{ seat.label }}</strong></div><div><span>SECTION</span><strong>{{ seat.section }}</strong></div><div><span>PRICE</span><strong>{{ seat.price | currency }}</strong></div></div>
+          <mat-form-field appearance="outline"><mat-label>Email for confirmation</mat-label><input matInput type="email" [(ngModel)]="email" required email /><mat-icon matSuffix>mail</mat-icon></mat-form-field>
+          <button mat-flat-button class="reserve" [disabled]="!email || booking()" (click)="reserve()">@if (booking()) { Reserving… } @else { Reserve seat }</button>
+          <p class="hint"><mat-icon>lock</mat-icon> The database locks this seat while your booking completes.</p>
+        } @else {
+          <div class="empty-selection"><mat-icon>event_seat</mat-icon><p>Select an available seat to continue.</p></div>
+        }
+        @if (message()) { <div class="message">{{ message() }}</div> }
+      </mat-card-content>
+    </mat-card>
+  </div>
+</main>
+
